@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import { MdOutlineArrowCircleLeft } from 'react-icons/md';
 
@@ -7,6 +7,7 @@ type Step = 1 | 2 | 3 | 4;
 
 function Page() {
   const [currentStep, setCurrentStep] = useState<Step>(1);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [formData, setFormData] = useState({
     postcode: '',
     firstName: '',
@@ -26,6 +27,19 @@ function Page() {
     { number: 3, title: 'Select Topic' },
     { number: 4, title: 'Send Message' },
   ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleNext = () => {
     if (currentStep < 4) {
@@ -124,16 +138,18 @@ function Page() {
       {currentStep === 1 ? (
         <Header />
       ) : (
-        <header className="fixed top-0 left-0 right-0 py-4 px-4 sm:px-6 z-50 bg-transparent">
+        <header className={`fixed top-0 left-0 right-0 py-4 px-4 sm:px-6 z-50 transition-all duration-300 ${
+          isScrolled ? 'bg-white shadow-md' : 'bg-transparent'
+        }`}>
           <div className="max-w-7xl mx-auto flex justify-between items-center">
             {/* Logo */}
             <div className="text-lg md:text-2xl font-bold italic">
-              <div className="text-black">
+              <div className={`${isScrolled ? 'text-black' : 'text-black'}`}>
                 Save
                 <span className="text-cyan-500">British </span>
               </div>
               <div>
-                <span className="text-pink-500">Business</span>
+                <span className={`${isScrolled ? 'text-pink-500' : 'text-pink-500'}`}>Business</span>
               </div>
             </div>
           </div>
@@ -144,14 +160,15 @@ function Page() {
       <main
         className={`flex-1 ${
           currentStep === 1
-            ? 'absolute right-0 left-0 bottom-10 md:bottom-20 flex items-center justify-center p-4'
-            : 'flex items-center justify-center p-4 pt-16 sm:pt-20'
+            ? 'absolute right-0 left-0 bottom-20 md:bottom-20 flex items-center justify-center p-4'
+            : 'flex items-center justify-center p-4 pt-24 sm:pt-32' // Increased top padding to push content lower
         }`}
       >
         <div className="w-full max-w-4xl mx-auto">
           {/* Centered Card with Stepper */}
-          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-4 sm:p-6 md:p-8 lg:p-12">
-            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+          <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg sm:shadow-xl p-4 md:p-8 lg:p-12">
+            <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8"> {/* Increased vertical spacing */}
+              
               {/* Step 1: Enter Postcode */}
               {currentStep === 1 && (
                 <div className="space-y-4 sm:space-y-5">
@@ -162,36 +179,36 @@ function Page() {
                     If you don't know can search on Google
                   </p>
 
-                  <div className="flex w-full max-w-lg mx-auto">
-                    <input
-                      type="text"
-                      value={formData.postcode}
-                      onChange={(e) =>
-                        updateFormData('postcode', e.target.value)
-                      }
-                      placeholder="XXXX - XXX"
-                      className="flex-1 px-3 sm:px-4 py-2 sm:py-3 border border-gray-200 rounded-l-lg outline-none transition-all text-center text-base sm:text-lg font-bold placeholder:text-center"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={handleNext}
-                      className="bg-[#1fa5e4] text-white py-2 sm:py-3 px-4 sm:px-6 rounded-r-lg font-semibold hover:bg-blue-600 transition-colors duration-200 shadow-lg hover:shadow-xl whitespace-nowrap text-sm sm:text-base"
-                    >
-                      Search
-                    </button>
-                  </div>
+                <div className="flex w-full max-w-xs sm:max-w-md md:max-w-lg mx-auto">
+  <input
+    type="text"
+    value={formData.postcode}
+    onChange={(e) =>
+      updateFormData('postcode', e.target.value)
+    }
+    placeholder="XXXX - XXX"
+    className="flex-1 px-2 sm:px-4 py-2 sm:py-3 border border-gray-200 rounded-l-lg outline-none transition-all text-center text-sm sm:text-lg font-bold placeholder:text-center"
+    required
+  />
+  <button
+    type="button"
+    onClick={handleNext}
+    className="bg-[#1fa5e4] text-white py-2 sm:py-3 px-3 sm:px-6 rounded-r-lg font-semibold hover:bg-blue-600 transition-colors duration-200 shadow-lg hover:shadow-xl whitespace-nowrap text-xs sm:text-base"
+  >
+    Search
+  </button>
+</div>
                 </div>
               )}
 
               {/* Step 2: Enter Details */}
               {currentStep === 2 && (
-                <div className="space-y-4 sm:space-y-6">
+                <div className="space-y-6 sm:space-y-8"> {/* Increased vertical spacing */}
                   {/* Back Arrow */}
                   <button
                     type="button"
                     onClick={handleBack}
-                    className="text-gray-600 hover:text-gray-800 transition-colors cursor-pointer duration-200"
+                    className="text-gray-600 hover:text-gray-800 transition-colors cursor-pointer duration-200 mb-4" // Added margin bottom
                   >
                     <MdOutlineArrowCircleLeft className="w-8 h-8 sm:w-10 sm:h-10" />
                   </button>
@@ -213,7 +230,7 @@ function Page() {
                     <p className="text-gray-600 text-sm sm:text-base">MP Name: John Smith</p>
                   </div>
 
-                  <div className="space-y-3 sm:space-y-4">
+                  <div className="space-y-4 sm:space-y-6"> {/* Increased vertical spacing */}
                     {/* First Name and Last Name in Flex */}
                     <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                       <div className="flex-1">
@@ -269,7 +286,7 @@ function Page() {
                     <button
                       type="button"
                       onClick={handleNext}
-                      className="flex mx-auto bg-[#5095f0] text-white py-2 sm:py-3 px-6 sm:px-10 rounded-lg font-semibold hover:bg-blue-600 transition-colors duration-200 shadow-lg hover:shadow-xl text-sm sm:text-base"
+                      className="flex mx-auto bg-[#5095f0] text-white py-2 sm:py-3 px-6 sm:px-10 rounded-lg font-semibold hover:bg-blue-600 transition-colors duration-200 shadow-lg hover:shadow-xl text-sm sm:text-base mt-4" // Added margin top
                     >
                       Next
                     </button>
@@ -279,12 +296,12 @@ function Page() {
 
               {/* Step 3: Select Topic */}
               {currentStep === 3 && (
-                <div className="space-y-4 sm:space-y-6">
+                <div className="space-y-6 sm:space-y-8"> {/* Increased vertical spacing */}
                   {/* Back Arrow */}
                   <button
                     type="button"
                     onClick={handleBack}
-                    className="text-gray-600 hover:text-gray-800 transition-colors cursor-pointer duration-200"
+                    className="text-gray-600 hover:text-gray-800 transition-colors cursor-pointer duration-200 mb-4" // Added margin bottom
                   >
                     <MdOutlineArrowCircleLeft className="w-8 h-8 sm:w-10 sm:h-10" />
                   </button>
@@ -298,9 +315,9 @@ function Page() {
                     education, transport, anything.
                   </p>
 
-                  <div className="space-y-3 sm:space-y-4">
+                  <div className="space-y-4 sm:space-y-6"> {/* Increased vertical spacing */}
                     {/* Topic Grid */}
-                    <div className="grid grid-cols-1 gap-3 sm:gap-4">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4">
                       {[
                         {
                           value: 'Job Security',
@@ -365,7 +382,7 @@ function Page() {
                     <button
                       type="button"
                       onClick={handleNext}
-                      className="flex mx-auto bg-[#5095f0] text-white py-2 sm:py-3 px-6 sm:px-10 rounded-lg font-semibold hover:bg-blue-600 transition-colors duration-200 shadow-lg hover:shadow-xl text-sm sm:text-base"
+                      className="flex mx-auto bg-[#5095f0] text-white py-2 sm:py-3 px-6 sm:px-10 rounded-lg font-semibold hover:bg-blue-600 transition-colors duration-200 shadow-lg hover:shadow-xl text-sm sm:text-base mt-4" // Added margin top
                     >
                       Next
                     </button>
@@ -375,12 +392,12 @@ function Page() {
 
               {/* Step 4: Send Message */}
               {currentStep === 4 && (
-                <div className="space-y-4 sm:space-y-6">
+                <div className="space-y-6 sm:space-y-8"> {/* Increased vertical spacing */}
                   {/* Back Arrow */}
                   <button
                     type="button"
                     onClick={handleBack}
-                    className="text-gray-600 hover:text-gray-800 transition-colors cursor-pointer duration-200"
+                    className="text-gray-600 hover:text-gray-800 transition-colors cursor-pointer duration-200 mb-4" // Added margin bottom
                   >
                     <MdOutlineArrowCircleLeft className="w-8 h-8 sm:w-10 sm:h-10" />
                   </button>
@@ -508,7 +525,7 @@ function Page() {
                     {/* Send Email Button */}
                     <button
                       type="submit"
-                      className="w-full bg-green-500 text-white py-2 sm:py-3 px-4 sm:px-6 rounded-lg font-semibold hover:bg-green-600 transition-colors duration-200 shadow-lg hover:shadow-xl text-sm sm:text-base"
+                      className="w-full bg-green-500 text-white py-2 sm:py-3 px-4 sm:px-6 rounded-lg font-semibold hover:bg-green-600 transition-colors duration-200 shadow-lg hover:shadow-xl text-sm sm:text-base mt-4" // Added margin top
                     >
                       Send Email to Gmail
                     </button>
