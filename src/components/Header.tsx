@@ -43,8 +43,8 @@ const Header = () => {
       <div className="absolute inset-0 bg-black/50"></div>
           <p className="text-white text-xl">
              <div className="text-white text-center relative z-10">
-                <h1 className="mb-6">
-                   <span className="text-[#7ec2f0] text-3xl tracking-wide font-semibold italic">
+                <h1 className="mb-2">
+                   <span className="text-[#7ec2f0] lg:text-3xl text-lg tracking-wide font-semibold italic">
                      Concerned About The Employment Rights Bill?{' '}
                      <span className="text-[#fcfdfd] text-3xl tracking-wide font-semibold italic">
                        Write
