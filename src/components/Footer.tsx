@@ -9,7 +9,7 @@ function Footer() {
           <p className="text-gray-300 max-w-2xl mx-auto leading-relaxed">
             At helps you write professional, respectful messages to national or
             local politicians. Reviews, edit, and send them directly to their
-            email all from one easy platform.
+            email all from one easy platform. 
           </p>
         </div>
 
